@@ -48,8 +48,8 @@ public class BookRepositoryTest {
         Book bookPS = bookRepository.save(book);
 
         // then (검증)
-        assertThat(author).isEqualTo(bookPS.getAuthor());
-        assertThat(title).isEqualTo(bookPS.getTitle());
+        assertThat(bookPS.getAuthor()).isEqualTo(author);
+        assertThat(bookPS.getTitle()).isEqualTo(title);
 
         // 트랜잭션 종료 (저장된 데이터 초기화)
     }
@@ -65,8 +65,8 @@ public class BookRepositoryTest {
         List<Book> booksPS = bookRepository.findAll();
 
         // then (검증)
-        assertThat(title).isEqualTo(booksPS.get(0).getTitle());
-        assertThat(author).isEqualTo(booksPS.get(0).getAuthor());
+        assertThat(booksPS.get(0).getTitle()).isEqualTo(title);
+        assertThat(booksPS.get(0).getAuthor()).isEqualTo(author);
 
     }
 
@@ -82,8 +82,8 @@ public class BookRepositoryTest {
         Book bookPS = bookRepository.findById(1L).get();
 
         // then (검증)
-        assertThat(author).isEqualTo(bookPS.getAuthor());
-        assertThat(title).isEqualTo(bookPS.getTitle());
+        assertThat(bookPS.getAuthor()).isEqualTo(author);
+        assertThat(bookPS.getTitle()).isEqualTo(title);
 
     }
 
@@ -122,9 +122,9 @@ public class BookRepositoryTest {
                 });
 
         // then (검증)
-        assertThat(id).isEqualTo(bookPS.getId());
-        assertThat(title).isEqualTo(bookPS.getTitle());
-        assertThat(author).isEqualTo(bookPS.getAuthor());
+        assertThat(bookPS.getId()).isEqualTo(id);
+        assertThat(bookPS.getTitle()).isEqualTo(title);
+        assertThat(bookPS.getAuthor()).isEqualTo(author);
 
     }
 
