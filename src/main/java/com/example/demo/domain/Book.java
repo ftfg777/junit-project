@@ -1,6 +1,6 @@
 package com.example.demo.domain;
 
-import com.example.demo.web.dto.BookRespDto;
+import com.example.demo.web.dto.response.BookRespDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

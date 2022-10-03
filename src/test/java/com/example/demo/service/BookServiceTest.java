@@ -3,9 +3,9 @@ package com.example.demo.service;
 import com.example.demo.domain.Book;
 import com.example.demo.repository.BookRepository;
 import com.example.demo.util.MailSender;
-import com.example.demo.web.dto.BookRespDto;
-import com.example.demo.web.dto.BookSaveRespDto;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.demo.web.dto.response.BookListRespDto;
+import com.example.demo.web.dto.response.BookRespDto;
+import com.example.demo.web.dto.request.BookSaveReqDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,7 +35,7 @@ public class BookServiceTest {
     @Test
     public void 책등록하기(){
         // given
-        BookSaveRespDto dto = new BookSaveRespDto();
+        BookSaveReqDto dto = new BookSaveReqDto();
         dto.setAuthor("정찬우");
         dto.setTitle("junit");
 
@@ -63,13 +63,13 @@ public class BookServiceTest {
         when(bookRepository.findAll()).thenReturn(books);
 
         // when
-        List<BookRespDto> bookRespDtoList = bookService.책목록보기();
+        BookListRespDto bookListRespDto = bookService.책목록보기();
 
         // then
-        assertThat(bookRespDtoList.get(0).getTitle()).isEqualTo("junit");
-        assertThat(bookRespDtoList.get(0).getAuthor()).isEqualTo("정찬우");
-        assertThat(bookRespDtoList.get(1).getTitle()).isEqualTo("spring");
-        assertThat(bookRespDtoList.get(1).getAuthor()).isEqualTo("석지영");
+        assertThat(bookListRespDto.getItems().get(0).getTitle()).isEqualTo("junit");
+        assertThat(bookListRespDto.getItems().get(0).getAuthor()).isEqualTo("정찬우");
+        assertThat(bookListRespDto.getItems().get(1).getTitle()).isEqualTo("spring");
+        assertThat(bookListRespDto.getItems().get(1).getAuthor()).isEqualTo("석지영");
     }
 
     @Test
@@ -94,7 +94,7 @@ public class BookServiceTest {
     public void 책수정하기(){
         // given
         Long id = 1L;
-        BookSaveRespDto dto = new BookSaveRespDto();
+        BookSaveReqDto dto = new BookSaveReqDto();
         dto.setTitle("수정할거야");
         dto.setAuthor("김찬우");
 
@@ -108,8 +108,8 @@ public class BookServiceTest {
         BookRespDto bookRespDto = bookService.책수정하기(id, dto);
 
         // then
-        assertThat(bookRespDto.getTitle()).isEqualTo("수정할거야");
-        assertThat(bookRespDto.getAuthor()).isEqualTo("김찬우");
+        assertThat(bookRespDto.getTitle()).isEqualTo(dto.getTitle());
+        assertThat(bookRespDto.getAuthor()).isEqualTo(dto.getAuthor());
 
     }
 

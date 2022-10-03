@@ -3,8 +3,9 @@ package com.example.demo.service;
 import com.example.demo.domain.Book;
 import com.example.demo.repository.BookRepository;
 import com.example.demo.util.MailSender;
-import com.example.demo.web.dto.BookRespDto;
-import com.example.demo.web.dto.BookSaveRespDto;
+import com.example.demo.web.dto.response.BookListRespDto;
+import com.example.demo.web.dto.response.BookRespDto;
+import com.example.demo.web.dto.request.BookSaveReqDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +25,7 @@ public class BookService {
 
     // 1. 책등록
     @Transactional(rollbackFor = RuntimeException.class)
-    public BookRespDto 책등록하기(BookSaveRespDto dto){
+    public BookRespDto 책등록하기(BookSaveReqDto dto){
         Book bookPS = bookRepository.save(dto.toEntity());
         if(bookPS != null){
             if (!mailSender.send()){
@@ -35,11 +36,16 @@ public class BookService {
     }
 
     // 2. 책목록보기
-    public List<BookRespDto> 책목록보기(){
-        return bookRepository.findAll().stream()
+    public BookListRespDto 책목록보기(){
+        List<BookRespDto> bookRespDtoList = bookRepository.findAll().stream()
                 //.map(book -> new BookRespDto().toDto(book)) Book 클래스에 toDto 있는게 좋음
                 .map(Book::toDto)
                 .collect(Collectors.toList());
+
+        BookListRespDto bookListRespDto = BookListRespDto.builder()
+                .bookList(bookRespDtoList)
+                .build();
+        return bookListRespDto;
     }
 
     // 3. 책한건보기
@@ -61,7 +67,7 @@ public class BookService {
 
     // 5. 책수정
     @Transactional(rollbackFor = RuntimeException.class)
-    public BookRespDto 책수정하기(Long id, BookSaveRespDto dto){
+    public BookRespDto 책수정하기(Long id, BookSaveReqDto dto){
         Optional<Book> bookOP = bookRepository.findById(id);
         if (bookOP.isPresent()){
             Book bookPS = bookOP.get();
