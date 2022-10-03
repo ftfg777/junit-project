@@ -4,7 +4,6 @@ import com.example.demo.domain.Book;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
 public class BookSaveRespDto {
     private String title;
