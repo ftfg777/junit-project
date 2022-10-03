@@ -33,10 +33,13 @@ public class BookRepositoryTest {
         // then (검증)
         assertThat(bookPS.getAuthor()).isEqualTo(author);
         assertThat(bookPS.getTitle()).isEqualTo(title);
-
     }
 
     // 2. 책 목록보기
+    @Test
+    public void 책목록보기_test(){
+
+    }
 
     // 3. 책 한건보기
 
