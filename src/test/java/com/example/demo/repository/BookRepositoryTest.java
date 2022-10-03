@@ -101,6 +101,31 @@ public class BookRepositoryTest {
     }
 
     // 5. 책 수정
+    // junit5, 정찬우
+    @Sql("classpath:db/tableInit.sql")
+    @Test
+    public void E_책수정_test(){
+        // given (데이터 준비)
+        Long id = 1L;
+        String title = "junit";
+        String author = "코딩";
+        Book book = new Book(id, title, author);
+
+        // when (테스트 실행)
+        Book bookPS = bookRepository.save(book);
+
+        bookRepository.findAll()
+                .forEach(books -> {
+                    System.out.println(books.toString());
+                    System.out.println("==============");
+                });
+
+        // then (검증)
+        assertThat(bookPS.getId()).isEqualTo(id);
+        assertThat(bookPS.getTitle()).isEqualTo(title);
+        assertThat(bookPS.getAuthor()).isEqualTo(author);
+
+    }
 
 
 }

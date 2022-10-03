@@ -3,9 +3,11 @@ package com.example.demo.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 
+@ToString
 @NoArgsConstructor
 @Getter
 @Entity
