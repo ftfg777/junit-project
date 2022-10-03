@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Setter
+@Getter
 public class BookSaveRespDto {
     private String title;
     private String author;
