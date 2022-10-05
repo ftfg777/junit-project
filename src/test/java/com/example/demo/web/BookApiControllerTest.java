@@ -85,14 +85,60 @@ public class BookApiControllerTest {
 
         System.out.println(response.getBody());
 
+        // then
         DocumentContext documentContext = JsonPath.parse(response.getBody());
         Integer code = documentContext.read("$.code");
         String title = documentContext.read("$.body.items[0].title");
 
-
-        // then
         assertThat(code).isEqualTo(1);
         assertThat(title).isEqualTo("junit5");
+
+    }
+
+    @Sql("classpath:db/tableInit.sql")
+    @Test
+    public void getBookOne_test(){
+        // given
+        Long id = 1L;
+
+        // when
+
+        HttpEntity<String> request = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/v1/book/"+id, HttpMethod.GET, request, String.class);
+
+        System.out.println(response.getBody());
+
+        // then
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        Integer code = documentContext.read("$.code");
+        String title = documentContext.read("$.body.title");
+
+        assertThat(code).isEqualTo(1);
+        assertThat(title).isEqualTo("junit5");
+
+    }
+
+    @Sql("classpath:db/tableInit.sql")
+    @Test
+    public void deleteBook_test(){
+        // given
+        Long id = 1L;
+
+        // when
+
+        HttpEntity<String> request = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/v1/book/"+id, HttpMethod.DELETE, request, String.class);
+
+        System.out.println("deleteBook_test() : " + response.getStatusCodeValue());
+
+        // then
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        Integer code = documentContext.read("$.code");
+
+        assertThat(code).isEqualTo(1);
+        assertThat(response.getStatusCodeValue()).isEqualTo(200);
 
     }
 
