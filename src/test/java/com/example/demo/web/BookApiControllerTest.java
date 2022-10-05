@@ -15,12 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.*;
 
 // 클라이언트와 테스트
 // 통합 테스트 (c, s, r)
+@ActiveProfiles("dev") //dev(개발) 모드 일 때만 작동
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class BookApiControllerTest {
 
@@ -139,6 +141,37 @@ public class BookApiControllerTest {
 
         assertThat(code).isEqualTo(1);
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
+
+    }
+
+    @Sql("classpath:db/tableInit.sql")
+    @Test
+    public void updateBook_test() throws JsonProcessingException {
+        // given
+        Long id = 1L;
+        BookSaveReqDto dto = BookSaveReqDto.builder()
+                .title("수정할거야")
+                .author("수정맨")
+                .build();
+
+        String body = objectMapper.writeValueAsString(dto);
+
+        // when
+        HttpEntity<String> request = new HttpEntity<>(body, headers);
+
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/v1/book/"+id, HttpMethod.PUT, request, String.class);
+
+        System.out.println("updateBook_test() : " + response.getStatusCodeValue());
+
+        // then
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        Integer code = documentContext.read("$.code");
+        String title = documentContext.read("$.body.title");
+        String author = documentContext.read("$.body.author");
+
+        assertThat(code).isEqualTo(1);
+        assertThat(title).isEqualTo(dto.getTitle());
+        assertThat(author).isEqualTo(dto.getAuthor());
 
     }
 

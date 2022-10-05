@@ -4,6 +4,7 @@ import com.example.demo.domain.Book;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 // DB 관련 테스트
 // 컨트롤러 -> dto -> service -> entity 변환 -> repository -> DB
+@ActiveProfiles("dev")
 @DataJpaTest // DB 와 관련된 컴포넌트만 메모리에 띄움
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class BookRepositoryTest {
