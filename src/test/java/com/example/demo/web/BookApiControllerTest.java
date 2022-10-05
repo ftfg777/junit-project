@@ -1,5 +1,7 @@
 package com.example.demo.web;
 
+import com.example.demo.domain.Book;
+import com.example.demo.repository.BookRepository;
 import com.example.demo.service.BookService;
 import com.example.demo.web.dto.request.BookSaveReqDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -7,11 +9,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -20,7 +24,9 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class BookApiControllerTest {
 
-    
+
+    @Autowired
+    private BookRepository bookRepository;
     @Autowired
     private TestRestTemplate testRestTemplate;
 
@@ -32,6 +38,17 @@ public class BookApiControllerTest {
         headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
     }
+    @BeforeEach
+    public void 데이터준비(){
+        String title = "junit5";
+        String author = "정찬우";
+        Book book = Book.builder()
+                .title(title)
+                .author(author)
+                .build();
+        Book bookPS = bookRepository.save(book);
+    }
+
     @Test
     public void saveBook_test() throws Exception {
         // given
@@ -53,6 +70,29 @@ public class BookApiControllerTest {
 
         assertThat(title).isEqualTo(bookSaveReqDto.getTitle());
         assertThat(author).isEqualTo(bookSaveReqDto.getAuthor());
+
+    }
+
+    @Sql("classpath:db/tableInit.sql")
+    @Test
+    public void getBookList_test(){
+        // given
+
+        // when
+        HttpEntity<String> request = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/v1/book", HttpMethod.GET, request, String.class);
+
+        System.out.println(response.getBody());
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        Integer code = documentContext.read("$.code");
+        String title = documentContext.read("$.body.items[0].title");
+
+
+        // then
+        assertThat(code).isEqualTo(1);
+        assertThat(title).isEqualTo("junit5");
 
     }
 
