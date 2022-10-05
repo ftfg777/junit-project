@@ -32,14 +32,6 @@ public class BookApiController { // 컴포지션 = has 관계
     @PostMapping("/api/v1/book")
     public ResponseEntity<?> saveBook(@RequestBody @Valid BookSaveReqDto dto, BindingResult bindingResult){
 
-        // AOP 처리하는 게 좋음
-        if (bindingResult.hasErrors()){
-            Map<String, String> errorMap = new HashMap<>();
-            for(FieldError fe : bindingResult.getFieldErrors()){
-                errorMap.put(fe.getField(), fe.getDefaultMessage());
-            }
-            throw new RuntimeException(errorMap.toString());
-        }
         BookRespDto bookRespDto = bookService.책등록하기(dto);
         return new ResponseEntity<>(CMRespDto.builder()
                 .code(1)
@@ -87,14 +79,6 @@ public class BookApiController { // 컴포지션 = has 관계
     public ResponseEntity<?> updateBook(@PathVariable Long id,
                                         @RequestBody @Valid BookSaveReqDto bookSaveReqDto, BindingResult bindingResult){
 
-        // AOP 처리하는 게 좋음
-        if (bindingResult.hasErrors()){
-            Map<String, String> errorMap = new HashMap<>();
-            for(FieldError fe : bindingResult.getFieldErrors()){
-                errorMap.put(fe.getField(), fe.getDefaultMessage());
-            }
-            throw new RuntimeException(errorMap.toString());
-        }
         BookRespDto bookRespDto = bookService.책수정하기(id, bookSaveReqDto);
 
         return new ResponseEntity<>(CMRespDto.builder()

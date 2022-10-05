@@ -14,10 +14,10 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class BookSaveReqDto {
     @Size(min = 1, max = 50)
-    @NotBlank // null, ""검사
+    @NotBlank(message = "제목을 입력해주세요 (공백제외)") // null, ""검사
     private String title;
     @Size(min = 2, max = 20)
-    @NotBlank
+    @NotBlank(message = "작가를 입력해주세요 (공백제외)")
     private String author;
 
     @Builder
